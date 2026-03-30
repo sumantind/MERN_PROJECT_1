@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "./user.css";
 import axios from "axios";
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const User = () => {
     const [users, setUsers] = useState([]);
@@ -22,10 +24,21 @@ const User = () => {
         fetchData();
     }, []);
 
+    const deleteUser = async (userId) => {
+        await axios.delete (`http://localhost:5000/api/delete/user/${userId}`)
+        .then((response)=>{
+            setUsers((prevUser)=>prevUser.filter((user)=>user._id !== userId));
+            toast.success(response.data.message,{position:"top-right"})
+        })
+        .catch((eroor)=>{
+            console.log(error);
+        })
+    }
+
     return (
         <div className="container">
             <div className="my-5">
-                <button className="btn btn-primary">Add user <i className="fa-solid fa-user-plus"></i></button>
+                <Link to="/add" type="button" className="btn btn-primary">Add user <i className="fa-solid fa-user-plus"></i></Link>
                 <div className="table-responsive userTable">
                     <table className="table table-bordered">
                         <thead>
@@ -54,10 +67,12 @@ const User = () => {
                                         <td>{user.email}</td>
                                         <td>{user.address}</td>
                                         <td className='actionButton'>
-                                            <button className="btn btn-info btn-sm">
+                                            <Link to = {`/update/`+user._id} className="btn btn-info btn-sm">
                                                 <i className='fa-solid fa-pen-to-square'></i>
-                                            </button>
-                                            <button className="btn btn-danger btn-sm">
+                                            </Link>
+                                            <button 
+                                            onClick={()=>deleteUser(user._id)}
+                                            className="btn btn-danger btn-sm">
                                                 <i className="fa-solid fa-trash"></i>
                                             </button>
                                         </td>

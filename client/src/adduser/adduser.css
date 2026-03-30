@@ -1,0 +1,7 @@
+.adduserform{
+    border: 1px solid rgb(16, 38, 110);
+    padding: 40px;
+    background-color: rgb(3, 3, 39);
+    color: white;
+    border-radius: 10px;
+}
